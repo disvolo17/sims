@@ -5,6 +5,25 @@ body {
   font-family: Arial;
 }
 
+/* 🌊 ЖИВОЙ ФОН */
+body::before {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0,255,150,0.15), transparent);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+  100% { opacity: 0.3; transform: scale(1); }
+}
+
 video { display: none; }
 
 /* 💚 PLUMBOB */
@@ -56,7 +75,7 @@ video { display: none; }
   box-shadow:
     inset 0 2px 6px rgba(255,255,255,0.3),
     0 10px 30px rgba(0,0,0,0.4);
-  transition: all 0.4s cubic-bezier(0.2, 1.2, 0.3, 1);
+  transition: all 0.5s cubic-bezier(0.2, 1.4, 0.3, 1);
   opacity: 0.5;
   animation: float 4s ease-in-out infinite;
 }
