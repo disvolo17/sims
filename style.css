@@ -1,13 +1,11 @@
 body {
   margin: 0;
-  background: radial-gradient(circle at center, #0a1f1a, #020d14);
+  background: radial-gradient(circle, #0a1f1a, #020d14);
   overflow: hidden;
   font-family: Arial;
 }
 
-video {
-  display: none;
-}
+video { display: none; }
 
 /* 💚 PLUMBOB */
 #plumbob {
@@ -32,7 +30,7 @@ video {
   transform: translate(-50%, -50%);
 }
 
-/* 💬 THOUGHT BUBBLE */
+/* 💬 THOUGHT */
 #thought {
   position: absolute;
   bottom: 80px;
@@ -78,9 +76,36 @@ video {
   box-shadow: 0 0 40px rgba(0,255,150,0.8);
 }
 
+/* ⭕ RADIAL MENU */
+#radialMenu {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: none;
+}
+
+.radial-item {
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+  color: white;
+  transform: translate(-50%, -50%);
+  transition: 0.3s;
+}
+
+.radial-item.active {
+  background: rgba(0,255,150,0.7);
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
 /* ✨ FLOAT */
 @keyframes float {
-  0% { transform: translateY(0px); }
+  0% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
-  100% { transform: translateY(0px); }
+  100% { transform: translateY(0); }
 }
