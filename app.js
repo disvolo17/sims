@@ -2,11 +2,17 @@ const video = document.getElementById("video")
 const aim = document.getElementById("aim")
 const cards = document.querySelectorAll(".card")
 const thought = document.getElementById("thought")
+const radialMenu = document.getElementById("radialMenu")
 
 let smoothX = 0
 let smoothY = 0
 let history = []
 let locked = null
+
+let radialItems = []
+let radialActive = null
+
+const actions = ["Open", "View", "Edit", "Close"]
 
 const texts = {
   left: "Посмотреть опыт 👀",
@@ -20,6 +26,36 @@ const positions = {
   right: { x: 0.5, y: 0 },
   up: { x: 0, y: -0.5 },
   down: { x: 0, y: 0.5 }
+}
+
+function showRadialMenu(x, y) {
+  radialMenu.innerHTML = ""
+  radialMenu.style.display = "block"
+  radialMenu.style.left = x + "px"
+  radialMenu.style.top = y + "px"
+
+  radialItems = []
+
+  const radius = 80
+
+  actions.forEach((action, i) => {
+    const angle = (i / actions.length) * Math.PI * 2
+
+    const item = document.createElement("div")
+    item.className = "radial-item"
+    item.innerText = action
+
+    item.style.left = 100 + Math.cos(angle) * radius + "px"
+    item.style.top = 100 + Math.sin(angle) * radius + "px"
+
+    radialMenu.appendChild(item)
+    radialItems.push({ el: item, angle })
+  })
+}
+
+function hideRadialMenu() {
+  radialMenu.style.display = "none"
+  radialActive = null
 }
 
 async function init() {
@@ -68,33 +104,56 @@ async function init() {
       history.reduce((a, p) => a + Math.abs(p.x - smoothX) + Math.abs(p.y - smoothY), 0) /
       history.length
 
-    if (variance < 0.01) locked = closest
-    else locked = null
+    if (variance < 0.01) {
+      locked = closest
+      showRadialMenu(window.innerWidth / 2, window.innerHeight / 2)
+    } else {
+      locked = null
+      hideRadialMenu()
+    }
 
     cards.forEach(card => {
       card.classList.remove("active", "locked")
-
-      if (card.classList.contains(closest)) {
-        card.classList.add("active")
-      }
-
-      if (card.classList.contains(locked)) {
-        card.classList.add("locked")
-      }
+      if (card.classList.contains(closest)) card.classList.add("active")
+      if (card.classList.contains(locked)) card.classList.add("locked")
     })
 
-    // 💬 THOUGHT
     if (closest) {
       thought.innerText = texts[closest]
       thought.style.opacity = 1
     }
 
-    // 🎯 АКТИВАЦИЯ (кивок)
-    if (locked && history.length > 5) {
+    // выбор в круге
+    if (radialItems.length) {
+      let closestItem = null
+      let min = Infinity
+
+      radialItems.forEach(item => {
+        const dx = Math.cos(item.angle) - smoothX
+        const dy = Math.sin(item.angle) - smoothY
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist < min) {
+          min = dist
+          closestItem = item
+        }
+      })
+
+      radialItems.forEach(i => i.el.classList.remove("active"))
+
+      if (closestItem) {
+        closestItem.el.classList.add("active")
+        radialActive = closestItem
+      }
+    }
+
+    // подтверждение (кивок)
+    if (locked && radialActive && history.length > 5) {
       const dyMove = history[history.length - 1].y - history[0].y
 
       if (Math.abs(dyMove) > 0.04) {
-        thought.innerText = "Выбрано: " + texts[locked]
+        thought.innerText = "Выбрано: " + radialActive.el.innerText
+        hideRadialMenu()
       }
     }
   })
