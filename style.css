@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  background: radial-gradient(circle at center, #0a1f1a, #020d14);
+  overflow: hidden;
+  font-family: Arial;
+}
+
+video {
+  display: none;
+}
+
+/* 💚 PLUMBOB */
+#plumbob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 25px;
+  height: 50px;
+  background: linear-gradient(#00ff9f, #00cc88);
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transform: translate(-50%, -50%);
+  animation: float 2s ease-in-out infinite;
+}
+
+/* 🎯 AIM */
+#aim {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 💬 THOUGHT BUBBLE */
+#thought {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+/* 🟢 CARDS */
+.card {
+  position: absolute;
+  padding: 25px 35px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(15px);
+  color: white;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,0.3),
+    0 10px 30px rgba(0,0,0,0.4);
+  transition: all 0.4s cubic-bezier(0.2, 1.2, 0.3, 1);
+  opacity: 0.5;
+  animation: float 4s ease-in-out infinite;
+}
+
+.left { left: 5%; top: 40%; }
+.right { right: 5%; top: 40%; }
+.up { top: 5%; left: 40%; }
+.down { bottom: 10%; left: 40%; }
+
+.card.active {
+  transform: scale(1.15);
+  opacity: 1;
+  background: linear-gradient(135deg, rgba(0,255,150,0.5), rgba(0,255,200,0.2));
+}
+
+.card.locked {
+  box-shadow: 0 0 40px rgba(0,255,150,0.8);
+}
+
+/* ✨ FLOAT */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
