@@ -4,6 +4,8 @@ const cards = document.querySelectorAll(".card")
 const thought = document.getElementById("thought")
 const radialMenu = document.getElementById("radialMenu")
 
+const clickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg")
+
 let smoothX = 0
 let smoothY = 0
 let history = []
@@ -106,7 +108,10 @@ async function init() {
 
     if (variance < 0.01) {
       locked = closest
-      showRadialMenu(window.innerWidth / 2, window.innerHeight / 2)
+      showRadialMenu(
+        window.innerWidth / 2 + smoothX * 300,
+        window.innerHeight / 2 + smoothY * 300
+      )
     } else {
       locked = null
       hideRadialMenu()
@@ -114,6 +119,15 @@ async function init() {
 
     cards.forEach(card => {
       card.classList.remove("active", "locked")
+
+      const key = [...card.classList].find(c => positions[c])
+
+      // 🧲 притяжение
+      card.style.transform = `
+        translate(${smoothX * 20}px, ${smoothY * 20}px)
+        scale(${closest === key ? 1.15 : 1})
+      `
+
       if (card.classList.contains(closest)) card.classList.add("active")
       if (card.classList.contains(locked)) card.classList.add("locked")
     })
@@ -123,7 +137,6 @@ async function init() {
       thought.style.opacity = 1
     }
 
-    // выбор в круге
     if (radialItems.length) {
       let closestItem = null
       let min = Infinity
@@ -147,11 +160,11 @@ async function init() {
       }
     }
 
-    // подтверждение (кивок)
     if (locked && radialActive && history.length > 5) {
       const dyMove = history[history.length - 1].y - history[0].y
 
       if (Math.abs(dyMove) > 0.04) {
+        clickSound.play()
         thought.innerText = "Выбрано: " + radialActive.el.innerText
         hideRadialMenu()
       }
